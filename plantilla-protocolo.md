@@ -6,6 +6,8 @@ Completa cada sección. Usa commits por sección; la historia del repositorio se
 
 ## 1. Pregunta e hipótesis
 
+**Pregunta:** ¿El producto vende más cuando se ubica en el pasillo principal que en su ubicación habitual?
+
 **Hipótesis:** El producto en el pasillo principal vende más en promedioque su ubicación habitual en ventas semanales durante 4 semanas.
 
 - **H₀:** La diferencia promedio de ventas semanales es 0, es decir, media_pasillo_principal - media_pasillo_habitual = 0.
@@ -21,18 +23,46 @@ Semana-Tienda: Número de tiendas por cada número de semanas asociadas al exper
 ## 3. Factor, niveles y tratamiento
 
 - **Factor** (variable manipulada): Ubicación del producto principal.
-- **Niveles** (valores del factor): Ubicación en el pasillo y ubicación habitual.
-- **Tratamiento** (combinación asignada): Ubicación en el pasillo durante una semana y ubicación habitual durante otra (grupo de control).
+- **Niveles** (valores del factor): Ubicación en el pasillo principal (variable **pasillo_principal**) y ubicación habitual (variable **habitual**).
+- **Tratamiento** (combinación asignada): Ubicación en el pasillo durante una semana y ubicación habitual durante la siguiente, alternando durante las 4 semanas. Un sorteo decide en qué ubicación comienza cada tienda (condición inicial).
 
 ## 4. Grupo de control
 
-La misma tienda pero con el producto dispuesto en la ubicación habitual
+La misma tienda pero con el producto dispuesto en la ubicación habitual (en las semanas en las que no recibe el tratamiento), de esta manera, cada tienda sirve como su propio grupo de control.
 
 ## 5. Aleatorización
 
-Sorteo de 20 tiendas a cada grupo (paralelo).
+Sorteo con semilla de la ubicación con la que comienza cada una de las 9 tienedas, después las ubicaciones se alternan semana a semana, cada tienda tiene 2 semanas en cada nivel.
 
-- **Línea de código de la asignación (Python o R):** escribe el comando que asigna al azar tus N unidades a los dos grupos (tratamiento y control) y ejecútalo con semilla. Incluye el resultado de una corrida y explica por qué el sorteo reparte los factores desconocidos entre los grupos.
+- **Asignación en Python:**
+
+```python
+rng = np.random.default_rng(1)
+primera = rng.choice(["pasillo_principal", "habitual"], size=len(tiendas))
+```
+
+- **Resultado de una corrida (semilla 1):**
+
+```
+['pasillo_principal' 'habitual' 'habitual' 'habitual' 'pasillo_principal'
+ 'pasillo_principal' 'habitual' 'habitual' 'pasillo_principal']
+```
+
+| Tienda | Semana 1 | Semana 2 | Semana 3 | Semana 4 |
+|---|---|---|---|---|
+| Quito_Norte | pasillo_principal | habitual | pasillo_principal | habitual |
+| Quito_Sur | habitual | pasillo_principal | habitual | pasillo_principal |
+| Guayaquil_Centro | habitual | pasillo_principal | habitual | pasillo_principal |
+| Guayaquil_Norte | habitual | pasillo_principal | habitual | pasillo_principal |
+| Cuenca_Norte | pasillo_principal | habitual | pasillo_principal | habitual |
+| Cuenca_Sur | pasillo_principal | habitual | pasillo_principal | habitual |
+| Ambato_Centro | habitual | pasillo_principal | habitual | pasillo_principal |
+| Loja | habitual | pasillo_principal | habitual | pasillo_principal |
+| Machala | pasillo_principal | habitual | pasillo_principal | habitual |
+
+**¿Por qué el sorteo reparte los factores desconocidos?:** Al decidir al azar qué tienda comienza en qué ubicación, ningún rasgo desconocido de la tienda o de la semana (factores incontrolables como el tamaño de la clientela, tendencia de ventas, etc.) queda ligado a un nivel del factor. Los factores se reparten por azar entre dos condiciones, dado que cada tienda se compara consigo misma, los rasgos de la propia tienda se cancelan en la diferencias.
+
+Finalmente, el balance entre condiciones se mantiene, a pesar de que 3 empiezan en pasillo_principal y 6 en habitual.
 
 ## 6. Respuesta y medición
 
