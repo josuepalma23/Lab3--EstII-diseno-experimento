@@ -66,23 +66,29 @@ Finalmente, el balance entre condiciones se mantiene, a pesar de que 3 empiezan 
 
 ## 6. Respuesta y medición
 
-- Variable respuesta: Ventas semanales en USD.
+- Variable respuesta: Ventas semanales en USD (variable **ventas_producto**).
 - Período de medición: 4 semanas.
-- Quién registra y cómo (¿ciego?): Mediante el POS, ciego (vendedor no sabe si el producto está en principal o en habitual).
+- Quién registra y cómo (¿ciego?): Mediante el POS, el experimento es ciego en el sentido de que quien analiza los datos en el equipo de RetailAndina y el personal en caja no conocen la hipótesis ni ningún orden asignado.
 
 ## 7. Factores a controlar (mínimo 4)
 
 | Factor a controlar | Cómo se controla o registra |
 |---|---|
-| 1. | Clima |
-| 2. | Evento local |
-| 3. | Surtido / Stock |
-| 4. | Cambios en el personal |
+| 1. Clima | Se registra la condición climática de cada semana según su ubicación, de manera que al alternar las ubicaciones del producto dentro de cada tienda, el clima afecta a ambas condiciones. |
+| 2. Evento local | Se anotan feriados, eventos cercanos a las tiendas en la columna **notas**, se excluyen o marcan las semanas afectados. |
+| 3. Surtido / Stock | Se verifica que el producto tenga siempre stock completo y el mismo surtido en ambas ubicaciones, se registran cambios o falta de disponibilidad en stock. |
+| 4. Cambios en el personal | Se registra cualquier rotación o cambio de vendedores durante el experimento, se es constante con el personal presente siempre que sea posible. |
+| 5. Promociones simultáneas | Se registra en la columna **promocion_simultanea** y se utiliza para excluir o ajustar las observaciones. |
+| 6. Semana / temporada | Se alterna la ubicación semana a semana y se sortea el orden de la condicion inicial, de manera que la tendencia entre semanas no favorezca ningún nivel. |
+
 
 ## 8. Limitaciones del diseño
 
-- Pérdida de potencia por promociones.
-- Canibalización de las tiendas.
+- Pérdida de potencia por promociones: Una promoción simultánea eleva ventas y confunde el efecto de la ubicación.
+- Canibalización de las tiendas: Mover el producto al pasillo principal puede quitar ventas a otros productos de la misma tienda.
+- Tamaño de muestra pequeño: Solo se están analizando 9 tiendas, por lo tanto, la precisión del intervalo depende de un número de ubicaciones limitadas.
+- Posible efecto de arrastre entre semanas: La ubicación de una semana puede influir en la siguiente, causando una tendencia creciente cada semana.
+- Los datos analizados surgen de una simulación, no datos reales.
 
 ## 9. Comparación en código (Python/R)
 
