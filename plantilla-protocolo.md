@@ -1,18 +1,22 @@
 # Plantilla de protocolo — Experimento de ubicación de producto
 
-**Equipo:** ___ · **Integrantes:** ___ · **Fecha:** 27/10/2026
+**Nombre:** Josue Palma Zambrano · **Fecha:** 17/11/2026
 
 Completa cada sección. Usa commits por sección; la historia del repositorio se revisa.
 
 ## 1. Pregunta e hipótesis
 
-El producto en el pasillo principal vende más en promedioque su ubicación habitual en ventas semanales durante 4 semanas 
+**Hipótesis:** El producto en el pasillo principal vende más en promedioque su ubicación habitual en ventas semanales durante 4 semanas.
+
+- **H₀:** La diferencia promedio de ventas semanales es 0, es decir, media_pasillo_principal - media_pasillo_habitual = 0.
+- **H₁:** La diferencia promedio es mayor a 0.
 
 ## 2. Unidad experimental
 
 Semana-Tienda: Número de tiendas por cada número de semanas asociadas al experimento. (**# de tiendas x # de semanas**)
 
-- 10 tiendas x 4 semanas = 40 unidades experimentales.
+- 9 tiendas x 4 semanas = 36 unidades experimentales.
+- Tiendas: Quito_Norte, Quito_Sur, Guayaquil_Centro, Guayaquil_Norte, Cuenca_Norte, Cuenca_Sur, Ambato_Centro, Loja y Machala.
 
 ## 3. Factor, niveles y tratamiento
 
