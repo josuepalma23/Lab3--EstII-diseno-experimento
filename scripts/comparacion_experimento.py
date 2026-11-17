@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from scipy import stats
 
-df = pd.read_csv("/home/acha/EsPRo/lab4/diseno-experimento/plantillas/registro_experimento.csv")
+df = pd.read_csv("plantillas/registro_experimento.csv")
 
 print(df.head())
 #Registros por ubicacion
