@@ -92,32 +92,82 @@ Finalmente, el balance entre condiciones se mantiene, a pesar de que 3 empiezan 
 
 ## 9. Comparación en código (Python/R)
 
-*Escribe `scripts/comparacion_experimento.py` (o `.R`): debe cargar `plantillas/registro_experimento.csv` y calcular el promedio de `ventas_producto` por `ubicacion`. Incluye la salida y responde:*
+El script **scripts/comparacion_experimento.py** carga el archivo **plantillas/registro_experimento.csv**, calcula el promedio de ventas_producto por ubicacion.
 
-- ¿Qué grupo muestra mayor venta promedio en la plantilla?
-El pasillo muestra 1335 USD en venta frente a 1040 USD en habitual
-
-- ¿Por qué con 4 filas no se puede concluir nada sobre el efecto de la ubicación?
-No se puede concluir porque no hay ninguna asignación real aleatoria, son muy pocos datos (4), no existe un control de temporada, ni promociones en el grupo pasillo y no hay medida de variabilidad.
-
-- Si el experimento se ejecutara con tu protocolo, ¿qué le faltaría a este análisis para ser justo?
-´´´
+```python
 import pandas as pd
-import numpy as np
+ 
+df = pd.read_csv("plantillas/registro_experimento.csv")
+print(df.groupby("ubicacion")["ventas_producto"].mean())
+print(df["ubicacion"].value_counts())
+```
+ 
+Salida:
+ 
+```
+ubicacion
+habitual             1040.0
+pasillo_principal    1335.0
+Name: ventas_producto, dtype: float64
+ 
+ubicacion
+pasillo_principal    2
+habitual             2
+Name: count, dtype: int64
+```
 
-tiendas = ["Quito Norte", "Quito Sur", "Guayaquil Centro", "Guayaquil Norte",
-            "Cuenca Centro", "Cuenca Sur", "Ambato Centro", "Manta", "Loja", "Machala"]
+- **¿Qué grupo muestra mayor venta promedio en la plantilla?**
+  
+El pasillo principal muestra 1335 USD en venta frente a 1040 USD en la ubicación habitual.
 
-semanas = [1, 2, 3, 4]
+- **¿Por qué con 4 filas no se puede concluir nada sobre el efecto de la ubicación?**
 
-#Sorteo de la condicion inicial
-rng = np.random.default_rng(1234597) ##permite generar rangos aleatorios bajo condiciones
-primera = rng.choice(["pasillo_principal", "habitual"], size=len(tiendas))
-filas = []
+No se puede concluir nada porque no existe una asignación aleatoria real dado que son muy pocos datos, cada ubicación corresponde a tiendas distintas, no existe un control de temporada y no hay una medida de variabilidad (desviación, intervalo de confianza, valor p).
 
-for tienda, cond in zip(tiendas, primera):
-    otra = "habitual" if cond == "pasillo_principal" else "pasillo_principal"
-    for s in semanas:
-        filas.append({"tienda": tienda, "semana": s,
-                     "ubicacion": cond, if s&2 == 1 else otra})
-´´´
+- **Si el experimento se ejecutara con tu protocolo, ¿Qué le faltaria a este análisis para ser justo?**
+
+Haría falta comparar cada tienda consigo misma (análisis pareado), tener varias tiendas y semanas con el orden sorteado, controlar o excluir las semanas con promociones y otros factores incontrolables, reportar la variabilidad con valores de desviación estándar de las diferencias, intervalo de confianza del 95% y valor p de una prueba t pareada.
+
+**Análisis con la simulación (resultado_simulacion.csv)**
+El diseño del protocolo (con la semilla 1) se simuló y guardó en resultado_simulación.csv. En la simulación, el efecto por semana va de 0 a 99 USD y el ruido tiene una desviación de 90 USD.
+
+**Implementación en código:**
+
+```python
+import pandas as pd
+from scipy import stats
+ 
+d = pd.read_csv("resultado_simulacion.csv")
+print(d.groupby("ubicacion")["ventas_producto"].mean())
+ 
+# Análisis pareado: una fila por tienda con sus condiciones
+piv = d.groupby(["tienda", "ubicacion"])["ventas_producto"].mean().unstack()
+piv["diferencia"] = piv["pasillo_principal"] - piv["habitual"]
+ 
+n = len(piv)
+media = piv["diferencia"].mean()
+dev = piv["diferencia"].std(ddof=1)
+t_crit = stats.t.ppf(0.975, df=n - 1)
+ic_inf = media - t_crit * dev / n**0.5
+ic_sup = media + t_crit * dev / n**0.5
+print(round(media, 2), round(dev, 2))
+print(f"{ic_inf:.2f} - {ic_sup:.2f}")
+ 
+prueba = stats.ttest_rel(piv["pasillo_principal"], piv["habitual"])
+print(f"{prueba.pvalue:.10f}")
+```
+**Resultados obtenidos:**
+
+| Medida | Valor |
+|---|---|
+| Promedio semanal en `habitual` | 1105.94 USD |
+| Promedio semanal en `pasillo_principal` | 1338.17 USD |
+| Diferencia promedio (n = 9 tiendas) | 232.22 USD |
+| Desviación estándar de las diferencias | 74.77 USD |
+| IC 95 % de la diferencia (t, 8 g.l.) | 174.75 – 289.70 USD |
+| Estadístico t | 9.32 |
+| Valor p (prueba t pareada) | 0.0000143571 |
+
+**Conclusión y análisis finales:**
+
+Con un 95% de confianza, podemos afirmar que el pasillo principal vende entre 174.75 USD y 289.70 USD más por semana que en la ubicación habitual (promedio de 232.22 USD). El intervalo no incluye el 0 y el valor p = 0.000014 es menor que 0.05, por lo que se rechaza H₀, hay evidencia de que la ubicación en el pasillo aumenta las ventas semanales.
