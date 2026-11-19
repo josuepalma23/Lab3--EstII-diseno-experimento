@@ -1,8 +1,11 @@
 import pandas as pd
 import numpy as np
 from scipy import stats
+from pathlib import Path
 
-df = pd.read_csv("plantillas/registro_experimento.csv")
+ruta = Path(__file__).resolve().parent.parent / "plantillas" / "registro_experimento.csv"
+
+df = pd.read_csv(ruta)
 
 print(df.head())
 #Registros por ubicacion
