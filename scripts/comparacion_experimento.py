@@ -26,7 +26,7 @@ print(primera)
 filas = []
 
 for tienda, cond in zip(tiendas, primera):
-    otra = "habitual" if cond == "pasillo_principal" else "pasillo"
+    otra = "habitual" if cond == "pasillo_principal" else "pasillo_principal"
     for s in semanas:
         filas.append({"tienda": tienda, "semana": s, "ubicacion": cond if s%2 == 1 else otra})
 
@@ -48,7 +48,7 @@ diseno['ventas_producto'] = (diseno['tienda'].map(efecto_tienda) + diseno['seman
 diseno['promocion_simultanea'] = 'no'
 
 #El loc lo que hace es que se cumpla una cierta condicion, despues de la coma es la columna en la que se va a poner 
-diseno.loc[(diseno['tienda'] == 'Guayaquil Centro') & (diseno['semana'] == 1), 'promocion_simultanea'] = 'si'
+diseno.loc[(diseno['tienda'] == 'Guayaquil_Centro') & (diseno['semana'] == 1), 'promocion_simultanea'] = 'si'
 diseno.loc[diseno['promocion_simultanea'] == 'si', 'ventas_producto'] += 180
 
 #print(diseno)
@@ -63,7 +63,7 @@ print(media)
 print(dev)
 #print(piv)
 n = len(piv)
-t_crict = stats.t.ppf(0.975, df=9)
+t_crict = stats.t.ppf(0.975, df= n - 1)
 ic_inf = media - (t_crict*dev/n**0.5)
 ic_sup = media + (t_crict*dev/n**0.5) 
 #print(round(ic_sup,2))
@@ -71,8 +71,9 @@ ic_sup = media + (t_crict*dev/n**0.5)
 
 #El experimento podemos decir que con un 95% de certeza es el valor promedio de la diferencia de ventas del producto
 #Se entra el pasillo principal y el habitual va a caer en el rango 
-print(f"{ic_inf} - {ic_sup}")
+print(f"{ic_inf:.5f} - {ic_sup:.5f}")
 
 ## prueba p-value
 prueba = stats.ttest_rel(piv["pasillo_principal"], piv["habitual"])
-print(f"{prueba.pvalue: .10f}")
+
+print(f" Prueba P-value:  {prueba.pvalue:.10f}")
